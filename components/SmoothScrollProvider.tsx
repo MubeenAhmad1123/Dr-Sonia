@@ -1,47 +1,42 @@
-"use client";
+'use client';
+import React, { useEffect } from 'react';
+import Lenis from '@studio-freight/lenis';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-import React, { useEffect, useRef } from "react";
-import Lenis from "@studio-freight/lenis";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-
-gsap.registerPlugin(ScrollTrigger);
-
-export default function SmoothScrollProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  const lenisRef = useRef<Lenis | null>(null);
-
+export default function SmoothScrollProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
-    // Initialize Lenis smooth scroll
     const lenis = new Lenis({
       lerp: 0.08,
       duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      smoothWheel: true,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
     });
 
-    lenisRef.current = lenis;
+    // Expose globally so other components can access it
+    (window as any).__lenis = lenis;
 
-    // Connect Lenis to GSAP ticker
-    function raf(time: number) {
-      lenis.raf(time);
-    }
-    
-    gsap.ticker.add(raf);
-    
-    // Connect GSAP ScrollTrigger to Lenis scroll event
-    lenis.on("scroll", ScrollTrigger.update);
-    
-    // Synchronize GSAP with user's custom scrolling loop
+    // Connection function for ticker
+    const tick = (time: number) => {
+      lenis.raf(time * 1000);
+    };
+
+    // Connect to GSAP ticker
+    gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
 
+    // Request Animation Frame loop fallback
+    let rafId: number;
+    function raf(time: number) {
+      lenis.raf(time);
+      rafId = requestAnimationFrame(raf);
+    }
+    rafId = requestAnimationFrame(raf);
+
     return () => {
-      gsap.ticker.remove(raf);
-      lenis.off("scroll", ScrollTrigger.update);
+      cancelAnimationFrame(rafId);
+      gsap.ticker.remove(tick);
       lenis.destroy();
+      (window as any).__lenis = null;
     };
   }, []);
 

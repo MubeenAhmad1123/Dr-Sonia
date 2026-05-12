@@ -7,212 +7,149 @@ import CrownSVG from "./CrownSVG";
 
 export default function CrownReveal() {
   const sectionRef = useRef<HTMLElement>(null);
-  const crownRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-  const sparkleContainerRef = useRef<HTMLDivElement>(null);
-  
-  // Track if sparkle has triggered in the current scroll direction to avoid spam
-  const hasSparkledRef = useRef(false);
-
-  const triggerSparkles = () => {
-    if (!sparkleContainerRef.current) return;
-    
-    const container = sparkleContainerRef.current;
-    const numSparkles = 12;
-    
-    // Clear any existing elements just in case
-    container.innerHTML = '';
-    
-    // Get crown bounding box to center the burst around it
-    const colors = ["#F0D080", "#FFFFFF", "#C9A84C"];
-    
-    for (let i = 0; i < numSparkles; i++) {
-      const sparkle = document.createElement('div');
-      const size = 3 + Math.random() * 4;
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      
-      sparkle.style.position = 'absolute';
-      sparkle.style.top = '50%';
-      sparkle.style.left = '50%';
-      sparkle.style.width = `${size}px`;
-      sparkle.style.height = `${size}px`;
-      sparkle.style.backgroundColor = color;
-      sparkle.style.borderRadius = '50%';
-      sparkle.style.transform = 'translate(-50%, -50%)';
-      sparkle.style.boxShadow = `0 0 10px ${color}`;
-      
-      container.appendChild(sparkle);
-      
-      const angle = Math.random() * Math.PI * 2;
-      const distance = 40 + Math.random() * 80;
-      const tx = Math.cos(angle) * distance;
-      const ty = Math.sin(angle) * distance;
-      
-      gsap.to(sparkle, {
-        x: tx,
-        y: ty,
-        opacity: 0,
-        scale: 0,
-        duration: 0.8 + Math.random() * 0.4,
-        ease: "power2.out",
-        onComplete: () => {
-          sparkle.remove();
-        }
-      });
-    }
-  };
 
   useEffect(() => {
+    // Import Lenis type safely from window
+    const lenis = (window as any).__lenis;
+
     gsap.registerPlugin(ScrollTrigger);
 
+    // Connect Lenis to ScrollTrigger — CRITICAL for scrub to work
+    if (lenis) {
+      lenis.on('scroll', ScrollTrigger.update);
+      // Ticker handled in Provider but just in case syncing here
+      gsap.ticker.lagSmoothing(0);
+    }
+
     const ctx = gsap.context(() => {
-      // Create a main master timeline scrubbed to scroll
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: sectionRef.current,
-          start: "top top",
-          end: "bottom bottom",
+          start: 'top top',
+          end: 'bottom bottom',
           scrub: 1.5,
-          onUpdate: (self) => {
-            // Trigger sparkle specifically when crossing 60% threshold moving forward
-            const progress = self.progress;
-            if (progress > 0.6 && progress < 0.65 && self.direction > 0 && !hasSparkledRef.current) {
-              triggerSparkles();
-              hasSparkledRef.current = true;
-            } else if (progress < 0.55) {
-              // Reset allows it to trigger again when scrolling back up and then down
-              hasSparkledRef.current = false;
-            }
-            
-            // Dynamically add/remove glow class based on progress
-            if (crownRef.current) {
-              if (progress >= 0.75) {
-                crownRef.current.classList.add('crown-glow');
-              } else {
-                crownRef.current.classList.remove('crown-glow');
-              }
-            }
-          }
-        }
+          pin: false, // sticky is handled by CSS, not GSAP pin
+        },
       });
 
-      // Initial styles
-      gsap.set(crownRef.current, {
-        y: -200,
-        opacity: 0,
-        rotation: -8,
-        scale: 0.8
-      });
-      
-      gsap.set(textRef.current, {
-        opacity: 0,
-        y: 20
-      });
-
-      // Build the timeline with fixed duration of 1 for easy percentage mapping
-      tl.to(crownRef.current, {
-        y: 0,
-        opacity: 1,
-        rotation: 0,
-        scale: 1,
-        duration: 0.6,
-        ease: "power1.inOut"
-      }, 0)
-      // The Sparkle burst is handled in onUpdate at 0.6
-      .to(crownRef.current, {
-        y: -12,
-        duration: 0.05,
-        ease: "power1.out"
-      }, 0.65)
-      .to(crownRef.current, {
-        y: 0,
-        duration: 0.05,
-        ease: "bounce.out"
-      }, 0.7)
-      // Glow is activated via onUpdate at 0.75
-      .to(textRef.current, {
-        opacity: 1,
-        y: 0,
-        duration: 0.2,
-        ease: "power2.out"
-      }, 0.8);
-
+      // Crown enters from above
+      tl.fromTo(
+        '#crown-element',
+        { y: -220, opacity: 0, rotation: -10, scale: 0.75 },
+        { y: 0, opacity: 1, rotation: 0, scale: 1, duration: 0.6, ease: 'power2.out' }
+      );
+      // Crown lands with a micro-bounce
+      tl.to('#crown-element', { y: -8, duration: 0.08 }, 0.6);
+      tl.to('#crown-element', { y: 0, duration: 0.12, ease: 'bounce.out' }, 0.68);
+      // Glow activates
+      tl.to(
+        '#crown-element',
+        {
+          filter: 'drop-shadow(0 0 18px rgba(240,208,128,0.85))',
+          duration: 0.2,
+        },
+        0.75
+      );
+      // Text fades in
+      tl.fromTo(
+        '#crown-text',
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.25 },
+        0.8
+      );
     }, sectionRef);
 
-    return () => ctx.revert();
+    return () => {
+      ctx.revert();
+      ScrollTrigger.getAll().forEach((t) => t.kill());
+    };
   }, []);
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative min-h-[200vh] w-full bg-gradient-to-b from-navy via-[#0a0818] to-navy"
+      className="relative bg-gradient-to-b from-navy via-[#0a0818] to-navy"
+      style={{ minHeight: '200vh' }}
     >
-      {/* Sticky Viewport Container */}
-      <div className="sticky top-0 h-screen w-full overflow-hidden flex flex-col items-center justify-center px-4">
-        
-        {/* Soft Ambient Background Glow behind the container */}
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] rounded-full bg-gold opacity-[0.06] blur-[100px] pointer-events-none z-0"
-        />
+      {/* Sticky Container */}
+      <div
+        style={{
+          position: 'sticky',
+          top: 0,
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          flexDirection: 'column',
+        }}
+      >
+        {/* Soft Background glow */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/[0.06] blur-[100px] rounded-full pointer-events-none" />
 
-        {/* Portrait Layout */}
-        <div className="relative z-10 w-full max-w-[280px] md:max-w-[360px] flex flex-col items-center">
-          
-          {/* Image Container */}
-          <div className="relative w-full aspect-[3/4] md:aspect-[4/5] rounded-2xl border border-gold/20 overflow-visible bg-gradient-to-b from-[#1a1528] to-navy shadow-2xl">
-            
-            {/* Photo Layer */}
-            <div className="w-full h-full rounded-2xl overflow-hidden relative z-0">
-              <img 
-                src="/images/photo_crown.jpg" 
-                alt="Dr. Sonia Imran Portrait"
-                className="w-full h-full object-cover object-top opacity-0 transition-opacity duration-700"
-                onLoad={(e) => e.currentTarget.classList.remove('opacity-0')}
-                onError={(e) => e.currentTarget.style.display = 'none'}
-              />
-            </div>
-
-            {/* Sparkle Burst Container layer sits above photo but anchored near top where crown is */}
-            <div 
-              ref={sparkleContainerRef} 
-              id="sparkle-container"
-              className="absolute left-1/2 z-30 pointer-events-none"
-              style={{ 
-                top: '12%', // Approximately where crown sits
-                width: '1px',
-                height: '1px'
-              }}
-            />
-
-            {/* The Crown Element */}
-            <div 
-              ref={crownRef}
+        <div className="relative flex flex-col items-center w-full px-4">
+          {/* Portrait Container */}
+          <div 
+            className="relative rounded-2xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0d0b1a] shadow-2xl overflow-visible"
+            style={{
+              width: 'min(280px, 85vw)', // Responsiveness: audits specify this on mobile
+              aspectRatio: '3 / 4'
+            }}
+          >
+            {/* The Crown Element - Using user specification explicitly */}
+            <div
               id="crown-element"
-              className="absolute left-1/2 -translate-x-1/2 z-20 w-[140px] md:w-[180px]"
               style={{
-                // Positioned relative to container height so it aligns with head top area
-                top: '-8%', 
+                position: 'absolute',
+                top: '-90px',          // User requested audit value
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'clamp(120px, 35vw, 200px)',  // Integrated mobile clamp from checklist (120px) + max desk (200px)
+                zIndex: 20,
+                pointerEvents: 'none',
               }}
             >
               <CrownSVG className="w-full h-auto" />
             </div>
+
+            {/* Photo Element */}
+            <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#1a1228] to-[#0d0b1a]">
+              <img
+                src="/images/photo_crown.webp"
+                alt="Dr. Sonia Imran portrait"
+                loading="lazy"
+                decoding="async"
+                style={{ 
+                  width: '100%', 
+                  height: '100%', 
+                  objectFit: 'cover', 
+                  objectPosition: 'top',
+                  opacity: 0, 
+                  transition: 'opacity 0.7s ease-in' 
+                }}
+                onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+            </div>
           </div>
 
-          {/* Revealed Text */}
+          {/* Crown Text Element */}
           <div 
-            ref={textRef}
             id="crown-text"
-            className="mt-8 text-center flex flex-col items-center z-10"
+            className="mt-8 text-center flex flex-col items-center w-full max-w-lg mx-auto"
+            style={{ padding: '0 1rem' }}
           >
-            <h3 className="font-playfair italic text-gold text-xl md:text-2xl tracking-wide">
+            <h3 
+              className="font-playfair italic text-gold tracking-wide"
+              style={{ fontSize: 'clamp(1rem, 4vw, 1.5rem)' }} // Fixed size from mobile audit B
+            >
               "She leads. She heals. She inspires."
             </h3>
-            <p className="font-inter text-white/60 text-sm mt-2 tracking-wider uppercase font-medium">
-              Dr. Sonia Imran — Physiotherapy Educator
+            <p className="font-inter text-white/60 text-xs md:text-sm mt-2 tracking-widest uppercase font-medium">
+              Dr. Sonia Imran
             </p>
           </div>
         </div>
-
       </div>
     </section>
   );

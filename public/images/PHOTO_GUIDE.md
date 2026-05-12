@@ -1,22 +1,18 @@
 # Photo Placement Guide for Dr. Sonia Birthday Site
 
-Add your photos to this folder (public/images/) with these exact filenames:
+Add your photos to the `public/images/` folder with these exact filenames. Ensure they are optimized WebP files for fast load times.
 
-| Filename | Where Used | Recommended Ratio | Notes |
+| Filename | Where Used | Recommended Aspect Ratio | Notes |
 |---|---|---|---|
-| photo_hero.jpg | Hero section portrait | 3:4 (portrait) | Main photo, face visible |
-| photo_crown.jpg | Crown reveal section | 3:4 (portrait) | Head at top of frame, important! |
-| photo_timeline_1.jpg | Timeline item 1 | 4:3 (landscape) | Any nice photo |
-| photo_timeline_2.jpg | Timeline item 2 | 4:3 | Any nice photo |
-| photo_timeline_3.jpg | Timeline item 3 | 4:3 | Any nice photo |
-| photo_timeline_4.jpg | Timeline item 4 | 4:3 | Any nice photo |
+| `photo_hero.webp` | Hero section portrait | 3:4 (Portrait) | Main high-quality photo, face clearly visible. |
+| `photo_crown.webp` | Crown Reveal section | 3:4 (Portrait) | **IMPORTANT:** Top of head must be visible with space above it for the crown to land. |
+| `photo_timeline_1.webp` | Timeline Item 1 | 4:3 (Landscape) | Engaging moment, e.g., teaching or classroom. |
+| `photo_timeline_2.webp` | Timeline Item 2 | 4:3 (Landscape) | Engaging moment, e.g., interaction or mentorship. |
+| `photo_timeline_3.webp` | Timeline Item 3 | 4:3 (Landscape) | Engaging moment showing long-term impact. |
+| `photo_timeline_4.webp` | Timeline Item 4 | 4:3 (Landscape) | Celebration or positive finale photo. |
 
-**Total: 6 photos needed (or use same photo multiple times for testing)**
-
-**For the crown to look best:** In photo_crown.jpg, make sure:
-- Her head/hair is clearly at the top portion of the image
-- Some space above her head (the crown will float down into this space)
-- Portrait orientation, face clearly visible
-
-All images should be JPG or WebP format.
-Compress to under 500KB each using https://squoosh.app for best performance.
+### ⚡ Optimization Rules
+- **Format:** Always use `.webp` (not `.jpg`, not `.png`)
+- **Quality:** Use WebP compression quality 85-90%.
+- **Max Size:** Aim for **under 300KB per image** to ensure ultra-fast performance on mobile networks.
+- **Tool:** Use [Squoosh.app](https://squoosh.app) to resize and compress.

@@ -17,45 +17,55 @@ function FlipCard({ item }: { item: typeof memoryCardsData[0] }) {
 
   return (
     <motion.div
-      className="relative w-full aspect-[1/1.15] cursor-pointer perspective-1000"
+      className="relative w-full aspect-[1/1.15] cursor-pointer"
       onClick={() => setIsFlipped(!isFlipped)}
       whileHover={!isFlipped ? { scale: 1.03, y: -4 } : {}}
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
+      style={{ perspective: '1000px' }}
     >
       <div
-        className={`w-full h-full relative transition-transform duration-700 preserve-3d`}
-        style={{ transform: isFlipped ? "rotateY(180deg)" : "none" }}
+        className="w-full h-full relative transition-transform duration-700"
+        style={{ 
+          transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
+          transformStyle: 'preserve-3d',
+        }}
       >
         {/* Front Face */}
-        <div className="absolute inset-0 backface-hidden bg-white/[0.03] backdrop-blur-md border border-gold/20 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center px-5 py-8 overflow-hidden transition-all duration-300 hover:border-gold/40">
-          {/* Subtle background inner gradient */}
+        <div 
+          className="absolute inset-0 bg-white/[0.03] backdrop-blur-md border border-gold/20 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.4)] flex flex-col items-center justify-center px-3 py-6 md:px-5 md:py-8 overflow-hidden transition-all duration-300 hover:border-gold/40"
+          style={{ backfaceVisibility: 'hidden', WebkitBackfaceVisibility: 'hidden' }}
+        >
           <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
           
-          <span className="text-4xl mb-4 filter drop-shadow-sm">{item.emoji}</span>
+          <span className="text-3xl md:text-4xl mb-3 md:mb-4 filter drop-shadow-sm">{item.emoji}</span>
           
-          <p className="font-inter text-white/80 text-sm text-center leading-relaxed font-light tracking-wide z-10">
+          <p className="font-inter text-white/80 text-xs md:text-sm text-center leading-relaxed font-light tracking-wide z-10">
             {item.front}
           </p>
           
-          <div className="mt-auto pt-4 flex items-center z-10">
-            <span className="text-[10px] uppercase tracking-widest text-gold/50 font-medium flex items-center gap-1.5 animate-pulse">
-              tap to open <span className="text-xs">↺</span>
+          <div className="mt-auto pt-2 flex items-center z-10">
+            <span className="text-[9px] md:text-[10px] uppercase tracking-widest text-gold/50 font-medium flex items-center gap-1.5 animate-pulse">
+              tap <span className="text-xs">↺</span>
             </span>
           </div>
         </div>
 
-        {/* Back Face (rotated 180deg natively inside preserve-3d) */}
+        {/* Back Face */}
         <div 
-          className="absolute inset-0 backface-hidden bg-gradient-to-br from-gold/[0.12] to-gold/[0.03] backdrop-blur-lg border border-gold/40 rounded-2xl shadow-[0_8px_32px_rgba(201,168,76,0.15)] flex flex-col items-center justify-center px-6 py-8 text-center"
-          style={{ transform: "rotateY(180deg)" }}
+          className="absolute inset-0 bg-gradient-to-br from-gold/[0.12] to-gold/[0.03] backdrop-blur-lg border border-gold/40 rounded-2xl shadow-[0_8px_32px_rgba(201,168,76,0.15)] flex flex-col items-center justify-center px-4 py-6 md:px-6 md:py-8 text-center"
+          style={{ 
+            backfaceVisibility: 'hidden', 
+            WebkitBackfaceVisibility: 'hidden',
+            transform: "rotateY(180deg)" 
+          }}
         >
-          <span className="text-3xl mb-3">{item.emoji}</span>
+          <span className="text-2xl md:text-3xl mb-2 md:mb-3">{item.emoji}</span>
           
-          <p className="font-inter text-white/90 text-[13px] leading-relaxed font-normal tracking-wide italic">
+          <p className="font-inter text-white/90 text-[11px] md:text-[13px] leading-relaxed font-normal tracking-wide italic">
             "{item.back}"
           </p>
           
-          <div className="mt-auto pt-4">
+          <div className="mt-auto pt-2 md:pt-4">
              <div className="w-8 h-[1px] bg-gold/40 mx-auto"></div>
           </div>
         </div>

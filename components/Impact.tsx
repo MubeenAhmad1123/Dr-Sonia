@@ -87,10 +87,10 @@ export default function Impact() {
             >
               {/* Number Container */}
               <div className="flex items-baseline font-playfair font-bold text-gold-gradient drop-shadow-sm">
-                <span className="text-[clamp(3rem,12vw,5.5rem)] leading-none tracking-tight">
+                <span className="text-[clamp(2.5rem,15vw,5rem)] leading-none tracking-tight">
                   <CounterItem target={stat.number} />
                 </span>
-                <span className="text-[clamp(1.5rem,6vw,2.5rem)] font-medium text-gold leading-none ml-1">
+                <span className="text-[clamp(1.2rem,6vw,2rem)] font-medium text-gold leading-none ml-1">
                   {stat.suffix}
                 </span>
               </div>
