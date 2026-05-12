@@ -19,6 +19,7 @@ export default function CrownReveal() {
         crownRef.current,
         {
           y: -350, // Starting high above the screen
+          xPercent: -50, // Maintain horizontal centering
           scale: 0.7,
           rotate: -12,
           opacity: 0,
@@ -26,6 +27,7 @@ export default function CrownReveal() {
         },
         {
           y: 0, // Lands exactly at top position
+          xPercent: -50, // Persist centering
           scale: 1,
           rotate: 0,
           opacity: 1,
