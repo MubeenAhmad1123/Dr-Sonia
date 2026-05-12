@@ -1,13 +1,16 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, useScroll, useSpring, useTransform, AnimatePresence } from "framer-motion";
-import Hero from "@/components/Hero";
-import CrownReveal from "@/components/CrownReveal";
-import Timeline from "@/components/Timeline";
-import MemoryCards from "@/components/MemoryCards";
-import Impact from "@/components/Impact";
-import Ending from "@/components/Ending";
+import dynamic from "next/dynamic";
+import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
+
+// Dynamic Client-Only Imports to avoid DOM node conflicts and extension interference
+const Hero = dynamic(() => import("@/components/Hero"), { ssr: false });
+const CrownReveal = dynamic(() => import("@/components/CrownReveal"), { ssr: false });
+const Timeline = dynamic(() => import("@/components/Timeline"), { ssr: false });
+const MemoryCards = dynamic(() => import("@/components/MemoryCards"), { ssr: false });
+const Impact = dynamic(() => import("@/components/Impact"), { ssr: false });
+const Ending = dynamic(() => import("@/components/Ending"), { ssr: false });
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);

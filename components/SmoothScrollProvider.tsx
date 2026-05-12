@@ -37,8 +37,5 @@ export default function SmoothScrollProvider({ children }: { children: React.Rea
     };
   }, []);
 
-  // Only render full tree after mounting ensures standard browser extensions don't break hydration cycle
-  if (!mounted) return null;
-
   return <>{children}</>;
 }

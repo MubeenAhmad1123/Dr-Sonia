@@ -147,7 +147,7 @@ export default function Ending() {
           transition={{ delay: 0.8 }}
           className="font-inter text-gold/50 text-xs md:text-sm font-medium tracking-[0.2em] uppercase flex items-center gap-2 mb-16"
         >
-          May 13, 2025 <span className="opacity-40">•</span> You Turn 26 Today 🎂
+          May 13, 2025 <span className="opacity-40">•</span> You Turn 27 Today 🎂
         </motion.p>
 
         {/* Actions Row - Mobile audit grid alignment */}
