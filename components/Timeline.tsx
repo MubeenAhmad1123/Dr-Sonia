@@ -90,7 +90,7 @@ export default function Timeline() {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ duration: 1.2, ease: "easeOut" }}
-                      className="aspect-[3/4] w-full relative"
+                      className="aspect-[2/3] w-full relative"
                     >
                       <Image
                         src={item.image}
