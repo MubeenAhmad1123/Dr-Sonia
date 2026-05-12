@@ -26,7 +26,8 @@ export default function Ending() {
         delay: Math.random() * 3,
         rotation: Math.random() * 720,
         color: colors[Math.floor(Math.random() * colors.length)],
-        type: types[Math.floor(Math.random() * types.length)]
+        type: types[Math.floor(Math.random() * types.length)],
+        sway: Math.random() * 30 - 15
       });
     }
     return pieces;
@@ -73,7 +74,7 @@ export default function Ending() {
               y: "110vh", 
               rotate: conf.rotation,
               opacity: [1, 1, 0], // Fade at end
-              x: [0, Math.random() * 30 - 15, 0] // Slight horizontal sway
+              x: [0, conf.sway, 0] // PRECOMPUTED stable sway
             }}
             transition={{
               duration: conf.duration,
@@ -117,8 +118,9 @@ export default function Ending() {
           transition={{ ...fadeInUp.transition, delay: 0.4 }}
           className="font-inter text-white/60 text-sm md:text-base max-w-lg font-light leading-loose mb-12"
         >
-          You may have stepped away from the classroom, but never from the hearts of those you taught. 
-          Wishing you a birthday as beautiful as the change you created. 
+          <span>You may have stepped away from the classroom, but never from the hearts of those you taught.</span>
+          <br />
+          <span>Wishing you a birthday as beautiful as the change you created.</span>
           <br />
           <span className="inline-block mt-2 font-normal text-gold/70">— From your student, always, Mubeen.</span>
         </motion.p>
@@ -147,7 +149,9 @@ export default function Ending() {
           transition={{ delay: 0.8 }}
           className="font-inter text-gold/50 text-xs md:text-sm font-medium tracking-[0.2em] uppercase flex items-center gap-2 mb-16"
         >
-          May 13, 2025 <span className="opacity-40">•</span> You Turn 27 Today 🎂
+          <span>May 13, 2025</span>
+          <span className="opacity-40">•</span>
+          <span>You Turn 27 Today 🎂</span>
         </motion.p>
 
         {/* Actions Row - Mobile audit grid alignment */}

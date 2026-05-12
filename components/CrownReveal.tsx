@@ -5,7 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
 
-export default function CrownReveal() {
+export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
   const sectionRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const portraitRef = useRef<HTMLDivElement>(null);
@@ -13,6 +13,8 @@ export default function CrownReveal() {
   const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (!isReady) return; // Only init after root-level state changes complete to prevent node displacement conflicts
+
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
@@ -23,6 +25,7 @@ export default function CrownReveal() {
           end: "bottom bottom", // Matches the extra height of parent section
           scrub: 1.2,
           pin: true, // Explicit GSAP pinning is safer than pure CSS sticky for sequenced animations
+          invalidateOnRefresh: true,
         }
       });
 
@@ -86,7 +89,7 @@ export default function CrownReveal() {
     }, sectionRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [isReady]);
 
   return (
     <section 

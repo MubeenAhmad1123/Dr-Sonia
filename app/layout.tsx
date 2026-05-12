@@ -22,7 +22,7 @@ export default function RootLayout({
           rel="stylesheet" 
         />
       </head>
-      <body className="antialiased bg-navy overflow-x-hidden selection:bg-gold/30 selection:text-gold-light">
+      <body suppressHydrationWarning className="antialiased bg-navy overflow-x-hidden selection:bg-gold/30 selection:text-gold-light">
         <SmoothScrollProvider>
           {children}
         </SmoothScrollProvider>
