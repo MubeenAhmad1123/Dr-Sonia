@@ -3,6 +3,8 @@
 import React from "react";
 import { motion } from "framer-motion";
 
+import Image from "next/image";
+
 const timelineItems = [
   { id: 1, image: "/images/photo_timeline_1.webp", quote: "Every great healer was once taught by someone extraordinary.", text: "From complex anatomy lectures to real-world clinical thinking — you made learning come alive.", tag: "The Teacher" },
   { id: 2, image: "/images/photo_timeline_2.webp", quote: "She didn't just teach physiotherapy. She taught us how to care.", text: "Your patience in explaining, your belief in struggling students, your genuine joy when we understood — that's unforgettable.", tag: "The Mentor" },
@@ -88,17 +90,14 @@ export default function Timeline() {
                       whileInView={{ scale: 1 }}
                       viewport={{ once: true, amount: 0.2 }}
                       transition={{ duration: 1.2, ease: "easeOut" }}
-                      className="aspect-[4/3] w-full relative"
+                      className="aspect-[3/4] w-full relative"
                     >
-                      <img
+                      <Image
                         src={item.image}
                         alt={item.tag}
-                        loading="lazy"
-                        decoding="async"
-                        className="w-full h-full object-cover opacity-0 group-hover:scale-105 transition-all duration-700 ease-out"
-                        style={{ objectFit: 'cover' }}
-                        onLoad={(e) => (e.target as HTMLImageElement).classList.remove("opacity-0")}
-                        onError={(e) => (e.target as HTMLImageElement).style.display = "none"}
+                        fill
+                        sizes="(max-width: 768px) 100vw, 384px"
+                        className="object-cover group-hover:scale-105 transition-all duration-700 ease-out"
                       />
                     </motion.div>
                   </div>
