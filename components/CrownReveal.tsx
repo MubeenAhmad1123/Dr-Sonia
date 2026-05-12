@@ -3,152 +3,149 @@
 import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import CrownSVG from "./CrownSVG";
+import Image from "next/image";
 
 export default function CrownReveal() {
   const sectionRef = useRef<HTMLElement>(null);
+  const crownRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Import Lenis type safely from window
-    const lenis = (window as any).__lenis;
-
     gsap.registerPlugin(ScrollTrigger);
 
-    // Connect Lenis to ScrollTrigger — CRITICAL for scrub to work
-    if (lenis) {
-      lenis.on('scroll', ScrollTrigger.update);
-      // Ticker handled in Provider but just in case syncing here
-      gsap.ticker.lagSmoothing(0);
-    }
-
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: 1.5,
-          pin: false, // sticky is handled by CSS, not GSAP pin
-        },
-      });
-
-      // Crown enters from above
-      tl.fromTo(
-        '#crown-element',
-        { y: -220, opacity: 0, rotation: -10, scale: 0.75 },
-        { y: 0, opacity: 1, rotation: 0, scale: 1, duration: 0.6, ease: 'power2.out' }
-      );
-      // Crown lands with a micro-bounce
-      tl.to('#crown-element', { y: -8, duration: 0.08 }, 0.6);
-      tl.to('#crown-element', { y: 0, duration: 0.12, ease: 'bounce.out' }, 0.68);
-      // Glow activates
-      tl.to(
-        '#crown-element',
+      // Cinematic Scroll Landing Animation
+      gsap.fromTo(
+        crownRef.current,
         {
-          filter: 'drop-shadow(0 0 18px rgba(240,208,128,0.85))',
-          duration: 0.2,
+          y: -350, // Starting high above the screen
+          scale: 0.7,
+          rotate: -12,
+          opacity: 0,
+          filter: "brightness(1.5) drop-shadow(0 0 0px rgba(255,215,0,0))",
         },
-        0.75
+        {
+          y: 0, // Lands exactly at top position
+          scale: 1,
+          rotate: 0,
+          opacity: 1,
+          filter: "brightness(1) drop-shadow(0 10px 30px rgba(201, 168, 76, 0.4))",
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top top",
+            end: "bottom 70%", // Completes landing by 70% of scroll duration
+            scrub: 1.5,
+          },
+        }
       );
-      // Text fades in
-      tl.fromTo(
-        '#crown-text',
-        { opacity: 0, y: 20 },
-        { opacity: 1, y: 0, duration: 0.25 },
-        0.8
+
+      // Subtle text reveal triggered slightly after landing starts
+      gsap.fromTo(
+        textRef.current,
+        {
+          opacity: 0,
+          y: 40,
+          filter: "blur(10px)",
+        },
+        {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 1,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "40% top", // Starts appearing after crown gets halfway
+            toggleActions: "play none none reverse"
+          }
+        }
       );
     }, sectionRef);
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
-    };
+    return () => ctx.revert();
   }, []);
 
   return (
     <section 
       ref={sectionRef} 
-      className="relative bg-gradient-to-b from-navy via-[#0a0818] to-navy"
-      style={{ minHeight: '200vh' }}
+      className="relative bg-[#05060f]" 
+      style={{ height: '200vh' }} // Crucial for enough scroll duration
     >
-      {/* Sticky Container */}
-      <div
-        style={{
-          position: 'sticky',
-          top: 0,
-          height: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden',
-          flexDirection: 'column',
-        }}
-      >
-        {/* Soft Background glow */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/[0.06] blur-[100px] rounded-full pointer-events-none" />
+      {/* Pinning Container via sticky */}
+      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+        
+        {/* Layer 1: Cinematic Ambient Background */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/[0.04] blur-[120px] rounded-full" />
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_#05060f_80%)]" />
+        </div>
 
-        <div className="relative flex flex-col items-center w-full px-4">
-          {/* Portrait Container */}
-          <div 
-            className="relative rounded-2xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0d0b1a] shadow-2xl overflow-visible"
-            style={{
-              width: 'min(280px, 85vw)', // Responsiveness: audits specify this on mobile
-              aspectRatio: '3 / 4'
-            }}
-          >
-            {/* The Crown Element - Using user specification explicitly */}
-            <div
-              id="crown-element"
+        {/* Content Composite */}
+        <div className="relative flex flex-col items-center z-10 w-full px-4">
+          
+          {/* Composite Portrait Wrapper */}
+          <div className="relative">
+            {/* Layer 2: The Portrait Image Container */}
+            <div 
+              className="relative rounded-3xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0a0910] shadow-2xl overflow-hidden"
               style={{
-                position: 'absolute',
-                top: '-90px',          // User requested audit value
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: 'clamp(120px, 35vw, 200px)',  // Integrated mobile clamp from checklist (120px) + max desk (200px)
-                zIndex: 20,
-                pointerEvents: 'none',
+                width: 'min(320px, 85vw)',
+                aspectRatio: '3 / 4'
               }}
             >
-              <CrownSVG className="w-full h-auto" />
-            </div>
-
-            {/* Photo Element */}
-            <div className="w-full h-full rounded-2xl overflow-hidden bg-gradient-to-b from-[#1a1228] to-[#0d0b1a]">
-              <img
+              <Image
                 src="/images/photo_crown.webp"
                 alt="Dr. Sonia Imran portrait"
-                loading="lazy"
-                decoding="async"
-                style={{ 
-                  width: '100%', 
-                  height: '100%', 
-                  objectFit: 'cover', 
-                  objectPosition: 'top',
-                  opacity: 0, 
-                  transition: 'opacity 0.7s ease-in' 
+                fill
+                priority
+                className="object-cover object-top transition-transform duration-[2s] hover:scale-[1.02]"
+                sizes="(max-width: 768px) 320px, 320px"
+              />
+              {/* Vignette over the photo */}
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/60" />
+            </div>
+
+            {/* Layer 3: The Landing Crown (Layered above) */}
+            <div
+              ref={crownRef}
+              className="absolute pointer-events-none z-20"
+              style={{
+                top: '-18%', // Calibrated positioning to fit above the head perfectly
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 'clamp(160px, 55%, 240px)', // Adaptive sizing relative to container
+              }}
+            >
+              <img
+                src="/images/crown.webp"
+                alt="Royal Gold Crown"
+                className="w-full h-auto drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
+                style={{
+                  filter: 'drop-shadow(0px 4px 20px rgba(201, 168, 76, 0.3))'
                 }}
-                onLoad={(e) => { (e.target as HTMLImageElement).style.opacity = '1'; }}
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
               />
             </div>
           </div>
 
-          {/* Crown Text Element */}
+          {/* Layer 4: Message */}
           <div 
-            id="crown-text"
-            className="mt-8 text-center flex flex-col items-center w-full max-w-lg mx-auto"
-            style={{ padding: '0 1rem' }}
+            ref={textRef}
+            className="mt-12 text-center flex flex-col items-center max-w-lg w-full"
           >
-            <h3 
-              className="font-playfair italic text-gold tracking-wide"
-              style={{ fontSize: 'clamp(1rem, 4vw, 1.5rem)' }} // Fixed size from mobile audit B
-            >
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold-light/60 mb-4 block">The Queen of Our Hearts</span>
+            
+            <h3 className="font-playfair italic text-gold text-[clamp(1.25rem,5vw,2rem)] leading-tight tracking-wide glow-text px-4">
               "She leads. She heals. She inspires."
             </h3>
-            <p className="font-inter text-white/60 text-xs md:text-sm mt-2 tracking-widest uppercase font-medium">
-              Dr. Sonia Imran
+            
+            <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent my-4 opacity-60" />
+            
+            <p className="font-inter text-white/70 text-xs md:text-sm uppercase tracking-[0.25em] font-medium">
+              The True Healer
             </p>
           </div>
+
         </div>
       </div>
     </section>
