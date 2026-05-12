@@ -7,6 +7,8 @@ import Image from "next/image";
 
 export default function CrownReveal() {
   const sectionRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
   const crownRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -14,55 +16,73 @@ export default function CrownReveal() {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // Cinematic Scroll Landing Animation
-      gsap.fromTo(
-        crownRef.current,
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: sectionRef.current,
+          start: "top top",
+          end: "bottom bottom", // Matches the extra height of parent section
+          scrub: 1.2,
+          pin: true, // Explicit GSAP pinning is safer than pure CSS sticky for sequenced animations
+        }
+      });
+
+      // Phase 1: Reveal Portrait Container
+      tl.fromTo(
+        portraitRef.current,
         {
-          y: -350, // Starting high above the screen
-          xPercent: -50, // Maintain horizontal centering
-          scale: 0.7,
-          rotate: -12,
           opacity: 0,
-          filter: "brightness(1.5) drop-shadow(0 0 0px rgba(255,215,0,0))",
+          y: 100,
+          scale: 0.85,
         },
         {
-          y: 0, // Lands exactly at top position
-          xPercent: -50, // Persist centering
-          scale: 1,
-          rotate: 0,
           opacity: 1,
-          filter: "brightness(1) drop-shadow(0 10px 30px rgba(201, 168, 76, 0.4))",
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "top top",
-            end: "bottom 70%", // Completes landing by 70% of scroll duration
-            scrub: 1.5,
-          },
+          y: 0,
+          scale: 1,
+          duration: 1.5,
+          ease: "power3.out"
         }
       );
 
-      // Subtle text reveal triggered slightly after landing starts
-      gsap.fromTo(
+      // Phase 2: The Crown Descends onto the head
+      tl.fromTo(
+        crownRef.current,
+        {
+          opacity: 0,
+          y: -400, // Start significantly higher
+          xPercent: -50, 
+          scale: 1.4, // Start slightly larger for a zooming-in drop effect
+          rotate: -10,
+        },
+        {
+          opacity: 1,
+          y: 0,
+          xPercent: -50,
+          scale: 1,
+          rotate: 0,
+          duration: 2.5, // Give the crown descent a hefty chunk of the scroll time
+          ease: "elastic.out(1, 0.8)", // Fun elegant bounce landing
+        },
+        "-=0.5" // Start drop before portrait completes its settle
+      );
+
+      // Phase 3: Text Reveal
+      tl.fromTo(
         textRef.current,
         {
           opacity: 0,
-          y: 40,
-          filter: "blur(10px)",
+          y: 30,
+          filter: "blur(8px)",
         },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
           duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: "40% top", // Starts appearing after crown gets halfway
-            toggleActions: "play none none reverse"
-          }
-        }
+          ease: "power2.out"
+        },
+        "-=1" // Overlap slightly with the crown finishing
       );
+
     }, sectionRef);
 
     return () => ctx.revert();
@@ -72,25 +92,27 @@ export default function CrownReveal() {
     <section 
       ref={sectionRef} 
       className="relative bg-[#05060f]" 
-      style={{ height: '200vh' }} // Crucial for enough scroll duration
+      style={{ height: '300vh' }} // Increased for sequential timeline beats
     >
-      {/* Pinning Container via sticky */}
-      <div className="sticky top-0 h-screen w-full flex items-center justify-center overflow-hidden">
+      {/* Composite Center */}
+      <div 
+        ref={containerRef} 
+        className="h-screen w-full flex items-center justify-center overflow-hidden"
+      >
         
-        {/* Layer 1: Cinematic Ambient Background */}
+        {/* Layer 1: Ambient Glow */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/[0.04] blur-[120px] rounded-full" />
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_30%,_#05060f_80%)]" />
         </div>
 
-        {/* Content Composite */}
         <div className="relative flex flex-col items-center z-10 w-full px-4">
           
-          {/* Composite Portrait Wrapper */}
           <div className="relative">
-            {/* Layer 2: The Portrait Image Container */}
+            {/* Layer 2: The Portrait (Separately animated now) */}
             <div 
-              className="relative rounded-3xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0a0910] shadow-2xl overflow-hidden"
+              ref={portraitRef}
+              className="relative rounded-3xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0a0910] shadow-2xl overflow-hidden z-10"
               style={{
                 width: 'min(320px, 85vw)',
                 aspectRatio: '3 / 4'
@@ -101,31 +123,31 @@ export default function CrownReveal() {
                 alt="Dr. Sonia Imran portrait"
                 fill
                 priority
-                className="object-cover object-top transition-transform duration-[2s] hover:scale-[1.02]"
+                className="object-cover object-top"
                 sizes="(max-width: 768px) 320px, 320px"
               />
-              {/* Vignette over the photo */}
               <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-navy/60" />
             </div>
 
-            {/* Layer 3: The Landing Crown (Layered above) */}
+            {/* Layer 3: The Crown (Optimized layout using next/image) */}
             <div
               ref={crownRef}
               className="absolute pointer-events-none z-20"
               style={{
-                top: '-18%', // Calibrated positioning to fit above the head perfectly
+                top: '-22%', // Fine-tuned relative position given it's a tall image with text baked in
                 left: '50%',
-                transform: 'translateX(-50%)',
-                width: 'clamp(160px, 55%, 240px)', // Adaptive sizing relative to container
+                transform: 'translateX(-50%)', // Fallback CSS centering
+                width: 'clamp(200px, 65%, 300px)', // Slightly larger so visual crown details pop
+                aspectRatio: '1 / 1'
               }}
             >
-              <img
+              <Image
                 src="/images/crown.webp"
-                alt="Royal Gold Crown"
-                className="w-full h-auto drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)]"
-                style={{
-                  filter: 'drop-shadow(0px 4px 20px rgba(201, 168, 76, 0.3))'
-                }}
+                alt="Royal Crown"
+                width={400}
+                height={400}
+                priority
+                className="w-full h-full object-contain drop-shadow-[0_10px_25px_rgba(0,0,0,0.6)]"
               />
             </div>
           </div>

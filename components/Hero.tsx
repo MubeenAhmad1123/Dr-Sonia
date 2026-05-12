@@ -175,7 +175,7 @@ export default function Hero() {
           <div className="mt-8 border border-gold/30 rounded-full px-6 py-2 text-gold text-xs font-medium backdrop-blur-md bg-gold/10 inline-flex items-center space-x-3 shadow-lg shadow-gold/5">
              <span>May 13</span>
              <span className="opacity-50 text-sm font-thin">|</span>
-             <span>Turning 26</span>
+             <span>Turning 27</span>
           </div>
         </motion.div>
       </div>
