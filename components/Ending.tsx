@@ -102,7 +102,7 @@ export default function Ending() {
           {...fadeInUp}
           className="font-inter text-gold/60 text-xs font-medium uppercase tracking-[0.3em] mb-8 block"
         >
-          With Love & Gratitude
+          With Respect & Gratitude
         </motion.span>
 
         <motion.h2
@@ -118,11 +118,11 @@ export default function Ending() {
           transition={{ ...fadeInUp.transition, delay: 0.4 }}
           className="font-inter text-white/60 text-sm md:text-base max-w-lg font-light leading-loose mb-12"
         >
-          <span>You may have stepped away from the classroom, but never from the hearts of those you taught.</span>
+          <span>Some people leave good impressions without even realizing it.</span>
           <br />
-          <span>Wishing you a birthday as beautiful as the change you created.</span>
+          <span>Wishing you a year filled with peace, happiness, success, and moments that make you smile.</span>
           <br />
-          <span className="inline-block mt-2 font-normal text-gold/70">— From your student, always, Mubeen.</span>
+          <span className="inline-block mt-2 font-normal text-gold/70">— From someone who genuinely appreciates you, Mubeen</span>
         </motion.p>
 
         {/* Pulsing Happy Birthday Element */}
@@ -149,7 +149,7 @@ export default function Ending() {
           transition={{ delay: 0.8 }}
           className="font-inter text-gold/50 text-xs md:text-sm font-medium tracking-[0.2em] uppercase flex items-center gap-2 mb-16"
         >
-          <span>May 13, 2025</span>
+          <span>May 13, 2026</span>
           <span className="opacity-40">•</span>
           <span>You Turn 27 Today 🎂</span>
         </motion.p>
@@ -199,10 +199,9 @@ export default function Ending() {
           </motion.button>
         </motion.div>
 
-        {/* Minimalist footer note */}
         <div className="w-full border-t border-white/5 pt-8">
-          <p className="font-inter text-white/20 text-[10px] md:text-xs tracking-widest font-light">
-            BUILT WITH 💛 BY MUBEEN <span className="mx-2">·</span> FOR DR. SONIA IMRAN <span className="mx-2">·</span> MAY 13, 2026
+          <p className="font-inter text-white/30 text-[10px] md:text-xs tracking-[0.25em] font-light uppercase">
+            A Small Birthday Surprise By Mubeen ✨
           </p>
         </div>
 

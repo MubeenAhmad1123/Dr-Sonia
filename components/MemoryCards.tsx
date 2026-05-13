@@ -4,12 +4,12 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 const memoryCardsData = [
-  { id: 1, front: "From a student who remembers every lecture 💛", back: "Ma'am, your way of explaining made even the hardest topics feel possible. Thank you for never giving up on us.", emoji: "📚" },
-  { id: 2, front: "A smile that made 8am lectures bearable ☀️", back: "You walked in every morning with energy that was contagious. The classroom felt different when you were in it.", emoji: "✨" },
-  { id: 3, front: "The teacher who believed in us first 🌟", back: "Before we believed in ourselves as future physiotherapists, you already saw the potential in us. That changed everything.", emoji: "🎓" },
-  { id: 4, front: "For someone who deserves all the good things 🎂", back: "Happy Birthday Dr. Sonia. May this year bring you as much joy as you've brought to everyone around you.", emoji: "🎁" },
-  { id: 5, front: "Your lessons are still with us, every day 🩺", back: "In every patient we treat, every assessment we make — a small piece of your teaching is there guiding us.", emoji: "💪" },
-  { id: 6, front: "Made with care by Mubeen 💫", back: "This entire website was built just to say: you matter, you're missed, and Happy Birthday, Ma'am.", emoji: "❤️" },
+  { id: 1, front: "Some people are simply memorable ✨", back: "Some personalities naturally leave behind comfort, respect, and good memories wherever they go.", emoji: "✨" },
+  { id: 2, front: "A positive presence matters 🌸", back: "The energy a kind person brings into a space is something people quietly appreciate every day.", emoji: "🌸" },
+  { id: 3, front: "Genuine people are rare 🌟", back: "Respect is earned most through sincerity, kindness, and how someone treats others.", emoji: "🌟" },
+  { id: 4, front: "For someone who deserves all the good things 🎂", back: "Happy Birthday Dr. Sonia. Wishing you peace, happiness, success, and countless reasons to smile this year.", emoji: "🎂" },
+  { id: 5, front: "Good people leave good memories 💫", back: "Some people may not realize it, but their presence genuinely makes a difference to others around them.", emoji: "💫" },
+  { id: 6, front: "A Small Birthday Surprise ✨", back: "This little website was made simply to wish you a beautiful birthday and remind you that you are appreciated.", emoji: "🎁" },
 ];
 
 function FlipCard({ item }: { item: typeof memoryCardsData[0] }) {

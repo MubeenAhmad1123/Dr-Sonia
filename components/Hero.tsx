@@ -166,9 +166,8 @@ export default function Hero() {
             Dr. Sonia Imran
           </h2>
           
-          {/* Tagline */}
           <p className="font-inter text-muted text-sm md:text-base font-light italic max-w-xs md:max-w-md mx-auto leading-relaxed text-[#A0A0B8]">
-            For someone who inspires future healers every day and brings light to everyone around her.
+            For someone whose kindness, grace, and presence leave a lasting impression on everyone around her.
           </p>
           
           {/* Date Badge */}

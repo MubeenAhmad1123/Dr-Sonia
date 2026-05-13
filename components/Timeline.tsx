@@ -6,10 +6,10 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const timelineItems = [
-  { id: 1, image: "/images/photo_timeline_1.webp", quote: "Every great healer was once taught by someone extraordinary.", text: "From complex anatomy lectures to real-world clinical thinking — you made learning come alive.", tag: "The Teacher" },
-  { id: 2, image: "/images/photo_timeline_2.webp", quote: "She didn't just teach physiotherapy. She taught us how to care.", text: "Your patience in explaining, your belief in struggling students, your genuine joy when we understood — that's unforgettable.", tag: "The Mentor" },
-  { id: 3, image: "/images/photo_timeline_3.webp", quote: "Some leave when the chapter ends. Others leave an impression that lasts forever.", text: "Even after stepping away, the impact you left on your students continues to shape their futures every single day.", tag: "The Impact" },
-  { id: 4, image: "/images/photo_timeline_4.webp", quote: "Happy Birthday to a woman who made the classroom feel like a calling.", text: "May 13 is not just your birthday — it's the day the world got someone truly special. We are grateful.", tag: "The Celebration" },
+  { id: 1, image: "/images/photo_timeline_1.webp", quote: "Some people earn respect naturally through the way they carry themselves.", text: "Your professionalism, confidence, and calm nature always made working around you feel comfortable and positive.", tag: "The Professional" },
+  { id: 2, image: "/images/photo_timeline_2.webp", quote: "The way someone treats people is often what makes them unforgettable.", text: "Your kindness, respectful nature, and positive energy are the kind of qualities people genuinely remember.", tag: "The Personality" },
+  { id: 3, image: "/images/photo_timeline_3.webp", quote: "Some people don't need years to leave a lasting impression.", text: "Even small interactions with the right people can stay in memory for a very long time.", tag: "The Impact" },
+  { id: 4, image: "/images/photo_timeline_4.webp", quote: "Happy Birthday to someone who deserves happiness, success, and beautiful moments ahead.", text: "Today is simply a reminder to celebrate someone genuinely appreciated.", tag: "The Celebration" },
 ];
 
 export default function Timeline() {
@@ -34,7 +34,7 @@ export default function Timeline() {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="font-inter text-white/50 text-center text-xs md:text-sm tracking-[0.2em] uppercase font-medium"
         >
-          Dr. Sonia Imran — Four Years of Inspiration
+          A Few Things That Make You Memorable
         </motion.p>
       </div>
 

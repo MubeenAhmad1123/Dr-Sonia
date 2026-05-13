@@ -1,49 +1,31 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
-import { motion, useInView } from "framer-motion";
+import React from "react";
+import { motion } from "framer-motion";
 
-const stats = [
-  { number: 200, suffix: "+", label: "Students Inspired", sublabel: "Future physiotherapists guided" },
-  { number: 4, suffix: " Years", label: "Of Dedication", sublabel: "Teaching with heart and patience" },
-  { number: 1000, suffix: "+", label: "Smiles Created", sublabel: "In classrooms and corridors" },
+const highlights = [
+  { 
+    id: 1, 
+    title: "Sincere Kindness", 
+    text: "Kindness that feels genuine", 
+    symbol: "✧",
+    sub: "Quietly uplifting"
+  },
+  { 
+    id: 2, 
+    title: "Comforting Spirit", 
+    text: "A personality that feels comforting", 
+    symbol: "✧",
+    sub: "Warm & professional"
+  },
+  { 
+    id: 3, 
+    title: "Lasting Impression", 
+    text: "And a presence people naturally remember", 
+    symbol: "✧",
+    sub: "Truly unforgettable"
+  }
 ];
-
-// Simple cubic ease out
-const easeOutCubic = (t: number): number => 1 - Math.pow(1 - t, 3);
-
-function CounterItem({ target, duration = 2000 }: { target: number; duration?: number }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
-  
-  useEffect(() => {
-    if (!isInView) return;
-
-    let startTime: number | null = null;
-    let frameId: number;
-
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      const easedProgress = easeOutCubic(progress);
-      
-      setCount(Math.floor(easedProgress * target));
-
-      if (progress < 1) {
-        frameId = requestAnimationFrame(step);
-      } else {
-        setCount(target);
-      }
-    };
-
-    frameId = requestAnimationFrame(step);
-
-    return () => cancelAnimationFrame(frameId);
-  }, [isInView, target, duration]);
-
-  return <span ref={ref}>{count}</span>;
-}
 
 export default function Impact() {
   return (
@@ -61,50 +43,46 @@ export default function Impact() {
             viewport={{ once: true }}
             className="font-playfair italic text-gold text-3xl md:text-4xl tracking-wide mb-3 glow-text"
           >
-            The Measure of a Great Teacher
+            Little Things That Make Someone Special
           </motion.h2>
           <motion.p 
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="font-inter text-white/50 text-sm font-light tracking-wide"
+            className="font-inter text-white/40 text-xs uppercase tracking-[0.2em] font-medium"
           >
-            Numbers that don't capture it all, but try to.
+            Qualities that leave a lasting mark
           </motion.p>
         </div>
 
-        {/* Stats Grid */}
+        {/* Qualities Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-6 lg:gap-12">
-          {stats.map((stat, index) => (
+          {highlights.map((item, index) => (
             <motion.div
-              key={index}
+              key={item.id}
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.15, duration: 0.6 }}
-              className="flex flex-col items-center border-t border-gold/10 pt-10 group hover:border-gold/30 transition-colors duration-500"
+              className="flex flex-col items-center border-t border-gold/10 pt-12 pb-6 px-4 group hover:border-gold/30 transition-colors duration-500 bg-white/[0.01] rounded-b-xl backdrop-blur-sm shadow-[0_8px_32px_-10px_rgba(0,0,0,0.2)]"
             >
-              {/* Number Container */}
-              <div className="flex items-baseline font-playfair font-bold text-gold-gradient drop-shadow-sm">
-                <span className="text-[clamp(2.5rem,15vw,5rem)] leading-none tracking-tight">
-                  <CounterItem target={stat.number} />
-                </span>
-                <span className="text-[clamp(1.2rem,6vw,2rem)] font-medium text-gold leading-none ml-1">
-                  {stat.suffix}
-                </span>
-              </div>
+              {/* Symbol Container */}
+              <span className="text-gold text-3xl font-light tracking-widest drop-shadow-sm block mb-4 group-hover:scale-110 transition-transform duration-500">
+                {item.symbol}
+              </span>
+
+              {/* Typography */}
+              <span className="text-[9px] font-inter font-semibold text-gold/50 uppercase tracking-[0.3em] mb-3">
+                {item.sub}
+              </span>
+
+              <h3 className="font-playfair text-white text-xl md:text-2xl font-light italic leading-relaxed">
+                "{item.text}"
+              </h3>
 
               {/* Divider line */}
-              <div className="w-16 h-px bg-gold/30 mt-6 group-hover:w-24 transition-all duration-500 ease-out" />
-
-              {/* Labels */}
-              <h3 className="font-inter text-white text-lg md:text-xl font-medium mt-5 tracking-wide">
-                {stat.label}
-              </h3>
-              <p className="font-inter text-white/40 text-xs md:text-sm mt-1.5 font-light max-w-[200px]">
-                {stat.sublabel}
-              </p>
+              <div className="w-10 h-px bg-gradient-to-r from-transparent via-gold/30 to-transparent mt-6 group-hover:w-16 transition-all duration-500 ease-out" />
             </motion.div>
           ))}
         </div>

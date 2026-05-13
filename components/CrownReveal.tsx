@@ -106,7 +106,7 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
       {/* Composite Center */}
       <div
         ref={containerRef}
-        className="h-screen w-full flex items-end justify-center pb-16 md:pb-24 overflow-hidden"
+        className="h-screen w-full flex items-end justify-center pb-6 md:pb-10 overflow-hidden"
       >
 
         {/* Layer 1: Ambient Glow */}
@@ -164,18 +164,18 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
           {/* Layer 4: Message */}
           <div
             ref={textRef}
-            className="mt-12 text-center flex flex-col items-center max-w-lg w-full will-change-[transform,opacity]"
+            className="mt-8 text-center flex flex-col items-center max-w-lg w-full will-change-[transform,opacity]"
           >
-            <span className="text-[10px] tracking-[0.4em] uppercase text-gold-light/60 mb-4 block">The Queen of Our Hearts</span>
+            <span className="text-[10px] tracking-[0.4em] uppercase text-gold-light/60 mb-4 block">Grace, Kindness & Someone Truly Admirable</span>
 
             <h3 className="font-playfair italic text-gold text-[clamp(1.25rem,5vw,2rem)] leading-tight tracking-wide glow-text px-4">
-              "She leads. She heals. She inspires."
+              "Kindness, confidence, and sincerity never go unnoticed."
             </h3>
 
             <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent my-4 opacity-60" />
 
             <p className="font-inter text-white/70 text-xs md:text-sm uppercase tracking-[0.25em] font-medium">
-              The True Healer
+              A Truly Wonderful Person
             </p>
           </div>
 
