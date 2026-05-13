@@ -1,10 +1,23 @@
 import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  display: "swap",
+});
+
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "Happy Birthday Dr. Sonia Imran 🎂",
-  description: "A special cinematic birthday tribute — May 13, 2025",
+  description: "A special cinematic birthday tribute — May 13, 2026",
 };
 
 export default function RootLayout({
@@ -13,15 +26,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link 
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600;1,700&display=swap" 
-          rel="stylesheet" 
-        />
-      </head>
+    <html lang="en" suppressHydrationWarning={true} className={`${inter.variable} ${playfair.variable}`}>
       <body suppressHydrationWarning className="antialiased bg-navy overflow-x-hidden selection:bg-gold/30 selection:text-gold-light">
         <SmoothScrollProvider>
           {children}

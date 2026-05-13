@@ -34,15 +34,17 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
         portraitRef.current,
         {
           opacity: 0,
-          y: 100,
-          scale: 0.85,
+          y: 60,
+          scale: 0.9,
+          force3D: true,
         },
         {
           opacity: 1,
           y: 0,
           scale: 1,
           duration: 1.5,
-          ease: "power3.out"
+          ease: "power3.out",
+          force3D: true,
         }
       );
 
@@ -51,21 +53,23 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
         crownRef.current,
         {
           opacity: 0,
-          y: -400, // Start significantly higher
-          xPercent: -50, 
-          scale: 1.4, // Start slightly larger for a zooming-in drop effect
-          rotate: -10,
+          y: () => -window.innerHeight * 0.8, // Start well above viewport top
+          xPercent: -50,
+          scale: 2.5, // Start significantly larger for a zooming-in drop effect
+          rotate: -15,
+          force3D: true,
         },
         {
           opacity: 1,
           y: 0,
           xPercent: -50,
-          scale: 1,
+          scale: 1, // Settles down into its snug final size
           rotate: 0,
-          duration: 2.5, // Give the crown descent a hefty chunk of the scroll time
-          ease: "elastic.out(1, 0.8)", // Fun elegant bounce landing
+          duration: 2.5, // Smooth sequence time
+          ease: "elastic.out(1.1, 0.9)", // Highly premium dampening bounce
+          force3D: true,
         },
-        "-=0.5" // Start drop before portrait completes its settle
+        "-=0.5" // Overlap seamlessly
       );
 
       // Phase 3: Text Reveal
@@ -73,17 +77,19 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
         textRef.current,
         {
           opacity: 0,
-          y: 30,
+          y: 20,
           filter: "blur(8px)",
+          force3D: true,
         },
         {
           opacity: 1,
           y: 0,
           filter: "blur(0px)",
           duration: 1,
-          ease: "power2.out"
+          ease: "power2.out",
+          force3D: true,
         },
-        "-=1" // Overlap slightly with the crown finishing
+        "-=1" // Overlap text fade with the crown landing
       );
 
     }, sectionRef);
@@ -92,17 +98,17 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
   }, [isReady]);
 
   return (
-    <section 
-      ref={sectionRef} 
-      className="relative bg-[#05060f]" 
-      style={{ height: '300vh' }} // Increased for sequential timeline beats
+    <section
+      ref={sectionRef}
+      className="relative bg-[#05060f]"
+      style={{ height: '200vh' }} // Increased for sequential timeline beats
     >
       {/* Composite Center */}
-      <div 
-        ref={containerRef} 
-        className="h-screen w-full flex items-center justify-center overflow-hidden"
+      <div
+        ref={containerRef}
+        className="h-screen w-full flex items-end justify-center pb-16 md:pb-24 overflow-hidden"
       >
-        
+
         {/* Layer 1: Ambient Glow */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/[0.04] blur-[120px] rounded-full" />
@@ -110,12 +116,12 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
         </div>
 
         <div className="relative flex flex-col items-center z-10 w-full px-4">
-          
+
           <div className="relative">
             {/* Layer 2: The Portrait (Separately animated now) */}
-            <div 
+            <div
               ref={portraitRef}
-              className="relative rounded-3xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0a0910] shadow-2xl overflow-hidden z-10"
+              className="relative rounded-3xl border border-gold/20 bg-gradient-to-b from-[#1a1228] to-[#0a0910] shadow-2xl overflow-hidden z-10 will-change-[transform,opacity]"
               style={{
                 width: 'min(320px, 85vw)',
                 aspectRatio: '3 / 4'
@@ -135,12 +141,12 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
             {/* Layer 3: The Crown (Optimized layout using next/image) */}
             <div
               ref={crownRef}
-              className="absolute pointer-events-none z-20"
+              className="absolute pointer-events-none z-20 will-change-[transform,opacity]"
               style={{
-                top: '-22%', // Fine-tuned relative position given it's a tall image with text baked in
+                top: '-15%', // Adjusted to sit perfectly lower over the portrait
                 left: '50%',
                 transform: 'translateX(-50%)', // Fallback CSS centering
-                width: 'clamp(200px, 65%, 300px)', // Slightly larger so visual crown details pop
+                width: 'clamp(170px, 55%, 250px)', // Decreased slightly for a tighter, premium fit
                 aspectRatio: '1 / 1'
               }}
             >
@@ -156,18 +162,18 @@ export default function CrownReveal({ isReady = true }: { isReady?: boolean }) {
           </div>
 
           {/* Layer 4: Message */}
-          <div 
+          <div
             ref={textRef}
-            className="mt-12 text-center flex flex-col items-center max-w-lg w-full"
+            className="mt-12 text-center flex flex-col items-center max-w-lg w-full will-change-[transform,opacity]"
           >
             <span className="text-[10px] tracking-[0.4em] uppercase text-gold-light/60 mb-4 block">The Queen of Our Hearts</span>
-            
+
             <h3 className="font-playfair italic text-gold text-[clamp(1.25rem,5vw,2rem)] leading-tight tracking-wide glow-text px-4">
               "She leads. She heals. She inspires."
             </h3>
-            
+
             <div className="w-12 h-[1px] bg-gradient-to-r from-transparent via-gold to-transparent my-4 opacity-60" />
-            
+
             <p className="font-inter text-white/70 text-xs md:text-sm uppercase tracking-[0.25em] font-medium">
               The True Healer
             </p>
