@@ -151,7 +151,7 @@ export default function Ending() {
         >
           <span>May 13, 2026</span>
           <span className="opacity-40">•</span>
-          <span>You Turn 27 Today 🎂</span>
+          <span>Celebrate day 🎂</span>
         </motion.p>
 
         {/* Actions Row - Mobile audit grid alignment */}
